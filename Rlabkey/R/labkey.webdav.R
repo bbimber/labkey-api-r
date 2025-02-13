@@ -59,12 +59,16 @@ labkey.webdav.getByUrl <- function(url, localFilePath, overwrite=TRUE, showProgr
 
     options <- labkey.getRequestOptions(method="GET")
 
-    progress <- ifelse(showProgressBar, yes = httr::progress(), no = NULL)
+    progressBar <- NULL
+    if (showProgressBar) {
+      progressBar <- httr::progress()
+    }
+
     if (!is.null(.lkdefaults[["debug"]]) && .lkdefaults[["debug"]] == TRUE){
         print(paste0("URL: ", url))
-        response <- GET(url=url, write_disk(localFilePath, overwrite=overwrite), config=options, verbose(data_in=TRUE, info=TRUE, ssl=TRUE), progress)
+        response <- GET(url=url, write_disk(localFilePath, overwrite=overwrite), config=options, verbose(data_in=TRUE, info=TRUE, ssl=TRUE), progressBar)
     } else {
-        response <- GET(url=url, write_disk(localFilePath, overwrite=overwrite), config=options, progress)
+        response <- GET(url=url, write_disk(localFilePath, overwrite=overwrite), config=options, progressBar)
     }
 
     processResponse(response)
