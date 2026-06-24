@@ -14,6 +14,11 @@
 #  limitations under the License.
 ##
 
+safe_as_integer64 <- function(x) {
+  x[x == ""] <- NA
+  bit64::as.integer64(x)
+}
+
 makeDF <- function(rawdata, colSelect=NULL, showHidden, colNameOpt)
 {
     decode <- fromJSON(rawdata, simplifyVector=FALSE, simplifyDataFrame=FALSE)
@@ -147,7 +152,7 @@ makeDF <- function(rawdata, colSelect=NULL, showHidden, colNameOpt)
   	        try(
                 if(mod=="date") { newdat[,j] <- .parseDate(newdat[,j])} else
                 if(mod=="string"){	suppressWarnings(mode(newdat[,j]) <- "character")} else
-                if(mod=="int"){ suppressWarnings(newdat[,j] <- bit64::as.integer64(newdat[,j]))} else
+                if(mod=="int"){ suppressWarnings(newdat[,j] <- safe_as_integer64(newdat[,j]))} else
                 if(mod=="boolean"){suppressWarnings(mode(newdat[,j]) <- "logical")} else
                 if(mod=="float"){suppressWarnings(mode(newdat[,j]) <- "numeric")} else
                 {print("MetaData field type not recognized.")}
@@ -163,7 +168,7 @@ makeDF <- function(rawdata, colSelect=NULL, showHidden, colNameOpt)
 	    try(
             if(mod=="date"){ newdat <- .parseDate(newdat)}else
             if(mod=="string"){suppressWarnings(mode(newdat) <- "character")} else
-            if(mod=="int"){ suppressWarnings(newdat[,j] <- bit64::as.integer64(newdat[,j]))} else
+            if(mod=="int"){ suppressWarnings(newdat[,j] <- safe_as_integer64(newdat[,j]))} else
             if(mod=="boolean"){suppressWarnings(mode(newdat) <- "logical")} else
             if(mod=="float"){suppressWarnings(mode(newdat) <- "numeric")} else
             {print("MetaData field type not recognized.")}
