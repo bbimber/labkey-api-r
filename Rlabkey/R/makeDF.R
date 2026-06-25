@@ -14,9 +14,20 @@
 #  limitations under the License.
 ##
 
+MAX_INT <- .Machine$integer.max
+MIN_INT <- -MAX_INT - 1
 safe_as_integer64 <- function(x) {
   x[x == ""] <- NA
-  bit64::as.integer64(x)
+  if (any(x > MAX_INT | x < MIN_INT, na.rm = T)) {
+    x <- bit64::as.integer64(x)
+
+    # NOTE: any NAs will be bit64::NA_integer64_
+    if (all(is.na(x))) {
+      return(as.integer(x))
+    }
+  }
+
+  return(x)
 }
 
 makeDF <- function(rawdata, colSelect=NULL, showHidden, colNameOpt)
