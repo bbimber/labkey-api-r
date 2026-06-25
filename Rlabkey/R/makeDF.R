@@ -19,7 +19,7 @@ MIN_INT <- -MAX_INT - 1
 safe_as_integer64 <- function(x) {
   x[x == ""] <- NA
   if (any(x > MAX_INT | x < MIN_INT, na.rm = T)) {
-    x <- bit64::as.integer64(x)
+    return(bit64::as.integer64(x))
   }
 
   return(as.integer(x))
